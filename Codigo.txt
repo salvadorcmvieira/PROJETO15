@@ -1,0 +1,181 @@
+CREATE DATABASE EscolaMusica;
+
+USE EscolaMusica;
+
+CREATE TABLE Aluno (
+    ID_Aluno INT PRIMARY KEY AUTO_INCREMENT,
+    Nome VARCHAR(100) NOT NULL,
+    Telefone VARCHAR(15) UNIQUE,
+    Email VARCHAR(100) UNIQUE,
+    Endereco VARCHAR(255)
+);
+
+CREATE TABLE Curso (
+    ID_Curso INT PRIMARY KEY AUTO_INCREMENT,
+    Nome_Curso VARCHAR(100) NOT NULL UNIQUE,
+    Duracao_Horas INT NOT NULL,
+    Custo DECIMAL(10, 2) NOT NULL,
+    CHECK (Duracao_Horas > 0),
+    CHECK (Custo >= 0)
+);
+
+CREATE TABLE Professor (
+    ID_Professor INT PRIMARY KEY AUTO_INCREMENT,
+    Nome VARCHAR(100) NOT NULL,
+    Telefone VARCHAR(15) UNIQUE,
+    Email VARCHAR(100) UNIQUE,
+    Especialidade VARCHAR(100)
+);
+
+CREATE TABLE Instrumento (
+    ID_Instrumento INT PRIMARY KEY AUTO_INCREMENT,
+    Nome_Instrumento VARCHAR(50) NOT NULL UNIQUE,
+    Descricao TEXT
+);
+
+CREATE TABLE Aula (
+    ID_Aula INT PRIMARY KEY AUTO_INCREMENT,
+    Data_Aula DATE NOT NULL,
+    Hora_Inicio TIME NOT NULL,
+    Sala VARCHAR(10) NOT NULL DEFAULT 'A01',
+    UNIQUE (Data_Aula, Hora_Inicio, Sala)
+);
+
+CREATE TABLE Matricula (
+    ID_Aluno INT NOT NULL,
+    ID_Curso INT NOT NULL,
+    Data_Matricula DATE NOT NULL,
+    PRIMARY KEY (ID_Aluno, ID_Curso),
+    FOREIGN KEY (ID_Aluno) REFERENCES Aluno(ID_Aluno) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Curso) REFERENCES Curso(ID_Curso) ON DELETE RESTRICT
+);
+
+CREATE TABLE Leciona (
+    ID_Professor INT NOT NULL,
+    ID_Curso INT NOT NULL,
+    PRIMARY KEY (ID_Professor, ID_Curso),
+    FOREIGN KEY (ID_Professor) REFERENCES Professor(ID_Professor) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Curso) REFERENCES Curso(ID_Curso) ON DELETE CASCADE
+);
+
+CREATE TABLE Ensina_Instrumento (
+    ID_Professor INT NOT NULL,
+    ID_Instrumento INT NOT NULL,
+    PRIMARY KEY (ID_Professor, ID_Instrumento),
+    FOREIGN KEY (ID_Professor) REFERENCES Professor(ID_Professor) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Instrumento) REFERENCES Instrumento(ID_Instrumento) ON DELETE CASCADE
+);
+
+CREATE TABLE Participa (
+    ID_Aula INT NOT NULL,
+    ID_Aluno INT NOT NULL,
+    PRIMARY KEY (ID_Aula, ID_Aluno),
+    FOREIGN KEY (ID_Aula) REFERENCES Aula(ID_Aula) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Aluno) REFERENCES Aluno(ID_Aluno) ON DELETE CASCADE
+);
+
+INSERT INTO Aluno (Nome, Telefone, Email, Endereco) VALUES
+('Ana Silva', '911230123', 'ana.s@email.com', 'Rua A, 1'),
+('Bruno Costa', '917384129', 'bruno.c@email.com', 'Av B, 2'),
+('Carla Dinis', '911374643', 'carla.d@email.com', 'Rua C, 3'),
+('David Esteves', '912749823', 'david.e@email.com', 'Av D, 4'),
+('Eva Ferreira', '911837634', 'eva.f@email.com', 'Rua E, 5'),
+('Filipe Gomes', '910364027', 'filipe.g@email.com', 'Rua F, 6');
+
+INSERT INTO Professor (Nome, Telefone, Email, Especialidade) VALUES
+('Ricardo Pereira', '925102837', 'ricardo.p@escola.com', 'Guitarra Clássica'),
+('Sofia Tavares', '925394557, 'sofia.t@escola.com', 'Piano'),
+('Tiago Mendes', '925839372', 'tiago.m@escola.com', 'Bateria'),
+('Vanda Nunes', '925732343', 'vanda.n@escola.com', 'Canto'),
+('Manuel Alves', '925173592', 'manuel.a@escola.com', 'Violino'),
+('Nuno Rocha', '925384628', 'nuno.r@escola.com', 'Guitarra Elétrica');
+
+INSERT INTO Curso (Nome_Curso, Duracao_Horas, Custo) VALUES
+('Introdução à Guitarra', 20, 150.00),
+('Piano Nível I', 30, 200.00),
+('Bateria Avançada', 40, 250.00),
+('Técnicas Vocais', 25, 175.00),
+('Violino para Iniciantes', 30, 220.00),
+('Teoria Musical Básica', 15, 100.00);
+
+INSERT INTO Instrumento (Nome_Instrumento, Descricao) VALUES
+('Guitarra Acústica', 'Instrumento de 6 cordas'),
+('Piano de Cauda', 'Instrumento de teclado grande'),
+('Bateria Completa', 'Set de percussão'),
+('Microfone Profissional', 'Para aulas de Canto'),
+('Violino 4/4', 'Instrumento de cordas e arco'),
+('Baixo Elétrico', 'Instrumento de 4 cordas');
+
+INSERT INTO Aula (Data_Aula, Hora_Inicio, Sala) VALUES
+('2025-10-01', '10:00:00', 'A01'),
+('2025-10-01', '14:30:00', 'B02'),
+('2025-10-02', '10:00:00', 'A01'),
+('2025-10-03', '18:00:00', 'C03'),
+('2025-10-04', '09:00:00', 'B02');
+
+INSERT INTO Matricula (ID_Aluno, ID_Curso, Data_Matricula) VALUES
+(1, 1, '2025-09-20'),
+(2, 2, '2025-09-21'),
+(3, 3, '2025-09-22'),
+(4, 1, '2025-09-23'),
+(5, 4, '2025-09-24'),
+(6, 6, '2025-09-25');
+
+INSERT INTO Leciona (ID_Professor, ID_Curso) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(1, 6);
+
+INSERT INTO Ensina_Instrumento (ID_Professor, ID_Instrumento) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(1, 6);
+
+INSERT INTO Participa (ID_Aula, ID_Aluno) VALUES
+(1, 1),
+(1, 4),
+(2, 2),
+(3, 3),
+(4, 5),
+(5, 6);
+
+
+
+SELECT *
+FROM Aluno;
+
+SELECT Nome, Email, Especialidade
+FROM Professor
+WHERE Especialidade LIKE '%Guitarra%';
+
+SELECT A.Nome AS Nome_Aluno, C.Nome_Curso
+FROM Aluno A
+JOIN Matricula M ON A.ID_Aluno = M.ID_Aluno
+JOIN Curso C ON M.ID_Curso = C.ID_Curso;
+
+SELECT
+    COUNT(ID_Curso) AS Total_Cursos,
+    AVG(Custo) AS Custo_Medio_Cursos,
+    MAX(Custo) AS Custo_Maximo_Curso
+FROM Curso;
+
+
+UPDATE Aluno
+SET Endereco = 'Rua Nova do Centro, 10'
+WHERE ID_Aluno = 1;
+
+
+
+-- Eliminar Aula 5
+DELETE FROM Aula
+WHERE ID_Aula = 5;
+
+-- Eliminar Instrumento 6
+DELETE FROM Instrumento
+WHERE ID_Instrumento = 6;
